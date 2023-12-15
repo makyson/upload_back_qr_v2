@@ -1,0 +1,12 @@
+{
+"version":"1.0.0",
+"name":"tutorial",
+
+"dependencies":{
+"cors":{"version":"2.8.5"},
+"express":{"version":"4.18.2"},
+"multer":{"version":"1.4.4"},
+"mysql2":{"version":"3.6.0"},
+"sequelize":{"version":"6.32.1"}
+}
+}
