@@ -1,4 +1,4 @@
-COMO RODAR O PROJETO BAIXADO
+git commit -m "first commit"COMO RODAR O PROJETO BAIXADO
 Instalar todas as dependencias indicada pelo package.json
 ### npm install
 
@@ -32,4 +32,4 @@ Multer é um middleware node.js para manipulação multipart/form-data, usado pa
 ### npm install --save multer
 
 Permitir acesso a API
-### npm install --save cors
+### npm install --save cors# qr_code_v1
