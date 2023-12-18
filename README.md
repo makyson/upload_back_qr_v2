@@ -33,3 +33,4 @@ Multer é um middleware node.js para manipulação multipart/form-data, usado pa
 
 Permitir acesso a API
 ### npm install --save cors# qr_code_v1
+"# qr_code_v1" 
