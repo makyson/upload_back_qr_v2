@@ -1,11 +1,17 @@
 
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize('bb','root','',{
+const sequelize = new Sequelize('banco_dados_qr','banco_dados_qr','Maximiano@2004',{
     dialect: 'mysql',
-    host:'localhost',
-    port: 3306
+    host:'banco_dados_qr.mysql.dbaas.com.br',
+    
 
+/*
+    const sequelize = new Sequelize('bb','root','',{
+        dialect: 'mysql',
+        host:'localhost',
+        port: 3306
+*/
 
 });sequelize.authenticate().then(() => {
     console.log('successfully.');
