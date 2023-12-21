@@ -12,7 +12,8 @@ const maquinaslist = database.define('maquinas',{
     
     primaryKey: true
    
-   
+
+
      },
 
 

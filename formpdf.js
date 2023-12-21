@@ -1,264 +1,18 @@
-const express = require('express');
-var cors = require('cors');
+
+
 
 const fs = require('fs');
 const path = require('path')
-require('dotenv').config();
+
 const puppeteer = require('puppeteer');
 
-
-const mecanicoimg =require('./model/mecanicoimg')
  
 const qr = require('qrcode');
 
 
 
-/**  const   nome_equipamento = item.nome;
-    const   url_imagem_equipamento = item.imageUrl;
-    const   modelo = item.modelo;
-    const   paramsval_name_lub_cal = 1;
-    const   gerulr = "";
-    const   ultima_troca_oleo_hor = item.ULTIMA_TROCA_HORIM;
-    const   param7= item.INTERVALO;
-    const   filtro_ar_interno_ultima = item.filtrohor;
-    const   filtro_ar_externo_ultima = item.filtrohor1;
-    const   filtro_separador_ultima = item.filtrohor4;
-    const   filtro_combustivel_ultima = item.filtrohor3;
-    const   filtro_ar_interno_proxima =   parseInt(item.filtrohor) - parseInt(item.INTERVALOfil);
-    const   filtro_ar_externo_proxima =   parseInt(item.filtrohor1) - parseInt(item.INTERVALOfil1);
-    const   filtro_separador_proxima = parseInt(item.filtrohor4) - parseInt(item.INTERVALOfil4);
-    const   filtro_combustivel_proxima = parseInt(item.filtrohor3) - parseInt(item.INTERVALOfil3);
-    
-    const   filtro_ar_interno_ultima_data =  item.dataultima;
-    const   filtro_ar_externo_ultima_data = item.dataultima1;
-    const   filtro_separador_ultima_data = item.dataultima4;
-    const   filtro_combustivel_ultima_data = item.dataultima3; */
-
-
-
+require('dotenv').config();
  
- 
-
-
-
-const app = express();
-
-//const mecanicoimg = require('./model/mecanicoimg');
-
-
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
-    res.header("Access-Control-Allow-Headers", "X-PINGOTHER, Content-Type, Authorization");
-    app.use(cors());
-    next();
-});
-  /*
-app.post("/upload-image", (req, res) => {
-    const { text } = req.body;
-  
-    const project = {
-        text
-      
-    };
-  
-    projects.push(project);
-  
-    return res.json(project);
-  });
-
-
-
-
-
-
-
-
-
-
-
-
-
-*/
-//C:\Users\makys\Desktop\upload_back_end_nodejs\public\upload\users\1692375177447_IMG-20230808-WA0042.jpg
-
-app.use('/imagem',express.static(path.resolve(__dirname,"public","upload")))
-
-const uploadUser = require('./middlewares/uploadImage');
-
-
-
-app.post("/upload-image", uploadUser.single('image'), async (req, res) => {
-  
-
-  try {
-    // Verifica se o arquivo não passou pelo middleware do multer
-    if (!req.file) {
-
-       console.log("Erro: Nenhuma imagem recebida!")
-      return res.status(400).json({
-        erro: true,
-        mensagem: "Erro: Nenhuma imagem recebida!"
-      });
-    }
-
-    // Se chegou aqui, significa que o arquivo foi processado pelo multer
-     console.log("Upload realizado com sucesso!")
-    return res.status(201).json({
-      erro: false,
-      mensagem: "Upload realizado com sucesso!"
-    });
-  } catch (error) {
-    // Se houver um erro durante o processamento do arquivo
-
-    console.log("Erro interno no servidor ao processar a imagem.")
-    return res.status(500).json({
-      erro: true,
-      mensagem: "Erro interno no servidor ao processar a imagem."
-    });
-  }
-});
-
-
-
-
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb', extended: true}));
-
-
-
-
-
-
-app.post('/upload-imagebase64', (req, res) => {
-  const { image } = req.body;
-
-  if (!image) {
-    return res.status(400).json({
-      erro: true,
-      mensagem: "Erro: Nenhuma imagem recebida!"
-    });
-  }
-
- console.log(JSON.parse(JSON.stringify(req.body)))
-
-  const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
-  const path = `./public/upload/users/${Date.now()}_image.png`;
-
-  fs.writeFile(path, base64Data, 'base64', (err) => {
-    if (err) {
-      console.log("Erro interno no servidor ao processar a imagem.");
-      return res.status(500).json({
-        erro: true,
-        mensagem: "Erro interno no servidor ao processar a imagem."
-      });
-    }
-
-    console.log("Upload realizado com sucesso!");
-    return res.status(201).json({
-      erro: false,
-      mensagem: "Upload realizado com sucesso!"
-    });
-  });
-});
-
-
-
-
-
-/*
-  if (req.file) {
-      console.log(req.file);
-      const obj = JSON.parse(JSON.stringify(req.body));
-      console.log(obj);
-
-      return res.json({
-          erro: false,
-          mensagem: "Upload realizado com sucesso!"
-      });
-  }
-
-  return res.status(400).json({
-      erro: true,
-      mensagem: "Erro: Upload não realizado com sucesso, necessário enviar uma imagem PNG ou JPG!"
-  });
-*/
-
-
-
-
-
-
-  
-  
-      //  const obj = JSON.parse(JSON.stringify(req.body));
-    //  const idd = (obj.id);
-
-
-     
-//await mecanicoimg.destroy({ where: { id: "adailton" } });
- /*     
-try {
-  await  mecanicoimg.create({ id: (idd), mecanicoimg: (caminho) })
-
-
-} catch (error) {
-
- fs.unlink(req.file.destination + "/" + req.file.filename , function(err){
-      if (err) throw err;
-      console.log('Atualizado!')
-  })
-
-  return res.status(400).json({
-      erro: true,
-      mensagem: "Erro:  nome de usuario já existe"
-  });
-
-
-  
-}*/
-
-/*
-  if (req.file) {
-      console.log(req.file);
-      const obj = JSON.parse(JSON.stringify(req.body));
-      console.log(obj);
-
-      return res.json({
-          erro: false,
-          mensagem: "Upload realizado com sucesso!"
-      });
-  }
-
-  return res.status(400).json({
-      erro: true,
-      mensagem: "Erro: Upload não realizado com sucesso, necessário enviar uma imagem PNG ou JPG!"
-  });
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -7386,1291 +7140,496 @@ OjI1KzAxOjAwL2Sx1gAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0xMC0yOVQxMjoxNzoyNSswMTow
 MF45CWoAAAAASUVORK5CYII=`
 
 
-    
-app.use(express.static(path.join(__dirname, 'public')));
 
-// Rota para enviar a página HTML
-app.get('/pagina', (req, res) => {
-  res.sendFile(path.join(__dirname, './form.html'));
-});
+
+
+
+
+  
+  
+  
+  
+  async function gerarRels(data) {
+  
 
 
    
-app.get('/maquina/:id', async (req, res) => {
-  const machineId = req.params.id;
+    for (const item of data) {
+      const   name_equipamento = item.nome;
+      const   url_imagem_equipamento = process.env.url_production + item.imageUrl;
+      const   modelo = item.modelo;
+      const   lubrificao =   item.lubrificao;
+      const   calibragem =  item.calibragem;
+     
 
-  try {
-    // Busca a máquina pelo ID no banco de dados
-    const machine = await mecanicoimg.findByPk(machineId);
+//3 calibra
+//2 lubrifica
+//1 nada 
+// qualquer outro tudo
 
-    if (!machine) {
-      return res.status(404).send('Máquina não encontrada');
-    }
 
-    // Se encontrou a máquina, retorna os detalhes em JSON
-    res.json(machine);
-  } catch (error) {
-    console.error('Erro ao buscar máquina:', error);
-    res.status(500).send('Erro interno ao buscar máquina');
+if (calibragem !== '' && lubrificao === '') {
+    paramsval_name_lub_cal = "2";
+    val_name_lub_cal = calibragem;
+
+  }else if (calibragem === '' && lubrificao !== '') {
+    paramsval_name_lub_cal = "3";
+    val_name_lub_cal = lubrificao;
+
+  }else if (calibragem !== '' && lubrificao !== '') {
+    paramsval_name_lub_cal = "4";
+    val_name_lub_cal = lubrificao;
+
+  }else if (calibragem === '' && lubrificao === '') {
+    paramsval_name_lub_cal = "1";
+    val_name_lub_cal = "";
   }
-});
-
-
-
-
-
-const Mecanico = require('./model/mecanicoimg'); // Supondo o caminho correto para o seu modelo
-const { json } = require('sequelize');
-
-// Rota para buscar informações de uma máquina específica
-app.get('/maquina/:nome', (req, res) => {
-  const nomeDaMaquina = req.params.nome;
-
-  // Consulta para obter os valores da máquina específica pelo nome
-  Mecanico.findOne({
-    where: { nome: nomeDaMaquina } // Filtra pela máquina específica
-  }).then(result => {
-    if (!result) {
-      return res.status(404).send('Máquina não encontrada');
-    }
-
-    // Aqui você pode acessar os dados da máquina específica
-    const dadosDaMaquina = {
-      name_equipamento: result.nome,
-      url_imagem_equipamento: result.imageUrl,
-
- 
-  //const url_imagem_qr = "https://th.bing.com/th?q=QR+Code+Google&w=120&h=120&c=1&rs=1&qlt=90&cb=1&dpr=1.3&pid=InlineBlock&mkt=pt-BR&cc=BR&setlang=pt-br&adlt=moderate&t=1&mw=247";
-
-
-  tipo_equipamento:result.modelo,
-  
- 
-    ultima_troca_oleo_hor:result.ultima_troca_oleo_hor,
-    proxima_troca_oleo_hor:result.ultima_troca_oleo_hor,
-    filtro_ar_interno_ultima:result.trocar,
-    filtro_ar_externo_ultima:result.trocar1,
-    filtro_separador_ultima:result.trocar4,
-    filtro_combustivel_ultima:result.trocar3,
-    filtro_ar_interno_proxima:result.trocar,
-    filtro_ar_externo_proxima:result.trocar1,
-    filtro_separador_proxima:result.trocar4,
-    filtro_combustivel_proxima:result.trocar3,
-
-    filtro_ar_interno_ultima_data:result.dataultima,
-    filtro_ar_externo_ultima_data:result.dataultima1,
-    filtro_separador_ultima_data:result.dataultima4,
-    filtro_combustivel_ultima_data:result.dataultima3,
-
-
-
-
-
-
-
-
-
- 
-
-
-    };
-
-    res.json(dadosDaMaquina); // Retorna os dados da máquina como um JSON
-  }).catch(err => {
-    console.error('Erro ao buscar dados da máquina:', err);
-    res.status(500).send('Erro ao buscar dados da máquina');
-  });
-});
-
-
-
-
-
-
-
-
-app.get('/gerar-rels/baixar', async (req, res) => {
-
-  const name_equipamento = req.query.nome;
-  //  const name_equipamento = name_equipamento1.length;
-    const url_imagem_equipamento = req.query.urlimg;
-    const modelo = req.query.tipo;
-    const val_name_lub_cal = req.query.dialubri;
-    const paramsval_name_lub_cal = req.query.paramlubr;
-    const gerulr = req.query.gerulr;
   
   
-    const ultima_troca_oleo_hor = parseInt(req.query.ult_oleo, 0) || 0;
-  
-    
-    const param7 = parseInt(req.query.ult_oleo_intevalo, 0) || 0;
-    
-  
-     const filtro_ar_interno_ultima = 	req.query.filtro_ar_interno_ultima  
-    const filtro_ar_externo_ultima = 	req.query.filtro_ar_externo_ultima  
-    const filtro_separador_ultima = 	req.query.filtro_separador_ultima  
-    const filtro_combustivel_ultima =	req.query.filtro_combustivel_ultima 
-       
-    const filtro_ar_interno_proxima =	req.query.filtro_ar_interno_proxima 
-    const filtro_ar_externo_proxima =	req.query.filtro_ar_externo_proxima 
-    const filtro_separador_proxima = 	req.query.filtro_separador_proxima  
-   const filtro_combustivel_proxima = 	req.query.	 filtro_combustivel_proxima  
-       
-    const filtro_ar_interno_ultima_data = 	req.query.filtro_ar_interno_ultima_data  
-    const filtro_ar_externo_ultima_data = 	req.query.filtro_ar_externo_ultima_data  
-    const filtro_separador_ultima_data = 	req.query.filtro_separador_ultima_data  
-    const filtro_combustivel_ultima_data = 	req.query.filtro_combustivel_ultima_data  
+
+
+   
       
-    const proxima_troca_oleo_hor = ultima_troca_oleo_hor + param7;
-    
-  
-  
-    
-  
-  
-  
-    const  top=10
+      const   gerulr = "https://comidagi.com.br/#/machineDetails/" + name_equipamento;
+      const   ultima_troca_oleo_hor = item.ULTIMA_TROCA_HORIM;
+      const   param7 = item.INTERVALO;
+      const   filtro_ar_interno_ultima = item.filtrohor;
+      const   filtro_ar_externo_ultima = item.filtrohor1;
+      const   filtro_separador_ultima = item.filtrohor4;
+      const   filtro_combustivel_ultima = item.filtrohor3;
 
+      const filtro_ar_interno_proxima = parseFloat(item.filtrohor.replace(',', '.')) + parseFloat(item.INTERVALOfil.replace(',', '.'));
+      const filtro_ar_externo_proxima = parseFloat(item.filtrohor1.replace(',', '.')) + parseFloat(item.INTERVALOfil1.replace(',', '.'));
+      const filtro_separador_proxima = parseFloat(item.filtrohor4.replace(',', '.')) + parseFloat(item.INTERVALOfil4.replace(',', '.'));
+      const filtro_combustivel_proxima = parseFloat(item.filtrohor3.replace(',', '.')) + parseFloat(item.INTERVALOfil3.replace(',', '.'));
+      
+
+      
+      const   filtro_ar_interno_ultima_data =  item.dataultima;
+      const   filtro_ar_externo_ultima_data = item.dataultima1;
+      
+
+      const   filtro_separador_ultima_data = item.dataultima4;
+      const   filtro_combustivel_ultima_data = item.dataultima3;
+  
+      //item.val_name_lub_cal;
+      // ... e assim por diante, acessando cada propriedade do objeto 'item'
+  
+      // Faça o que precisar com esses dados dentro deste loop
+      console.log(
+        
+        name_equipamento,
+        url_imagem_equipamento,
+        modelo,
+        paramsval_name_lub_cal,
+        val_name_lub_cal,
+        
+        gerulr,
+        ultima_troca_oleo_hor,
+        param7,
+        filtro_ar_interno_ultima,
+        filtro_ar_externo_ultima,
+        filtro_separador_ultima,
+        filtro_combustivel_ultima,
+        filtro_ar_interno_proxima,
+        
+        filtro_ar_externo_proxima,
+        
+        filtro_separador_proxima,
+        filtro_combustivel_proxima,
+        
+        filtro_ar_interno_ultima_data,
+        filtro_ar_externo_ultima_data,
+        filtro_separador_ultima_data,
+        filtro_combustivel_ultima_data,);
+      
+      // Você pode realizar operações, cálculos, ou chamar outras funções usando esses dados aqui
+      // Por exemplo, você pode chamar uma função para gerar QR codes para cada equipamento, ou processar os dados de alguma outra forma.
+      
    
-  
-  
-   
-  
-   
-  
-   const options = {
-    margin: 1,}
-   
-   if (!gerulr) {
-     url_imagem_qr = ""; // Define como uma string vazia se gerulr for nulo ou indefinido
-  } else {   qr.toFile('public/upload/qr/meu_qr_code.png', gerulr, options, (err) => {
-      if (err) throw err;
-  
-    });
-  
-   url_imagem_qr = "http://191.252.109.142:8080/imagem/qr/meu_qr_code.png";
-  }
+      
+          
+      
+
+
+      
+   const proxima_troca_oleo_hor =  parseFloat(ultima_troca_oleo_hor.replace(',', '.')) + parseFloat(param7.replace(',', '.'));
     
-  
-  
+      const top=10
+
+    
+    
+
+    
+
+     
     
     
      
-      try {
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        
-       const cod_dia_lub = (padi = 86,padi1 = 100) => {
-  
-  
-        if (paramsval_name_lub_cal == "1") {
-  
-          return    ` <div style="width: 120.86px; height: 113px; left: 114.60px; top: ${padi}px; position: absolute">
-          <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
-          <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
-       
-       
-          </div> `;
-         
-         }else if(paramsval_name_lub_cal == "2"){
-          return     `<div style="width: 161.50px; height: 25px; left: 165.36px; top: ${padi1 + 17}px; position: absolute">
-          <div style="width: 161.50px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-          
-          <div style="width: 153.65px; height: 19px; left: 4.49px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">${val_name_lub_cal}</div>
-         </div>
-         
-         
-         <div style="width: 158.29px; height: 17px; left: 168.57px; top: ${padi1}px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Dia lubrificar</div>
-         <div style="width: 120.86px; height: 113px; left: 30.60px; top: ${padi}px; position: absolute">
-                <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
-                <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
-             
-             
-                </div>
-         
-         `;
     
-        
-         }else if(paramsval_name_lub_cal == "3"){
-          return     `<div style="width: 161.50px; height: 25px; left: 165.36px; top: ${padi1 + 17}px; position: absolute">
-          <div style="width: 161.50px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-          
-          <div style="width: 153.65px; height: 19px; left: 4.49px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">${val_name_lub_cal}</div>
-         </div>
-         
-         
-         <div style="width: 158.29px; height: 17px; left: 168.57px; top: ${padi1 + 17}px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Dia lubrificar</div>
-         <div style="width: 120.86px; height: 113px; left: 30.60px; top: ${padi}px; position: absolute">
-                <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
-                <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
-             
-             
-                </div>`;
-         
-         
-         
-         
-         
-        }else{  
-          return    `<div style="width: 161.50px; height: 25px; left: 165.36px; top: ${padi1 + 17}px; position: absolute">
-         <div style="width: 161.50px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-         
-         <div style="width: 153.65px; height: 19px; left: 4.49px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">${val_name_lub_cal}</div>
-        </div>
-        
-        
-        <div style="width: 158.29px; height: 17px; left: 168.57px; top: ${padi + 17}px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Dia Calibrar e lubrificar</div>
-        <div style="width: 120.86px; height: 113px; left: 30.60px; top: ${padi}px; position: absolute">
-                <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
-                <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
-             
-             
-                </div>`;
-       
+     
+    
+     const options = {
+      margin: 1,}
+     
+     if (!gerulr) {
+       url_imagem_qr = ""; // Define como uma string vazia se gerulr for nulo ou indefinido
+    } else {
+    
+    
+    
+    
+      qr.toFile('public/upload/qr/meu_qr_code.png', gerulr, options, (err) => {
+        if (err) throw err;
+    
+      });
+    
+     url_imagem_qr = process.env.url_production + "/imagem/qr/meu_qr_code.png";
     }
-  
-  
-       }
       
-  
-  
-        
-  
-  
-        const htmlContent1 = `
-        <div style="width: 336px; height: 492px; position: relative; background: linear-gradient(180deg, rgba(127.09, 156.99, 254.15, 0.79) 0%, #7F9DFE 74%); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);display: inline-block;border: 1px; border-style: dashed">
-            <div style="width: 329px; height: 475px; left: 0px; top: 10px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 14.56px; top: 305px; position: absolute">
-                <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_interno_ultima}</div>
-              </div>
-              <div style="width: 153.48px; height: 25px; left: 172.31px; top: 305px; position: absolute">
-                <div style="width: 153.48px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 146.02px; height: 19px; left: 4.26px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_externo_ultima}</div>
-              </div>
-              <div style="width: 312.30px; height: 34px; left: 16.70px; top: 222px; position: absolute">
-                <div style="width: 312.30px; height: 34px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 304.82px; height: 26px; left: 4.28px; top: 4px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 25px; font-family: Inter; font-weight: 400; word-wrap: break-word">${ultima_troca_oleo_hor}</div>
-              </div>
-              <div style="width: 154.01px; height: 25px; left: 172.85px; top: 333px; position: absolute">
-                <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_externo_ultima_data}</div>
-              </div>
-  
-  
-  
-        
-           
-              ${cod_dia_lub()} 
-              <div style="width: 154.01px; height: 25px; left: 14.56px; top: 333px; position: absolute">
-                <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_interno_ultima_data}</div>
-              </div>
-              <div style="width: 154.01px; height: 25px; left: 15.63px; top: 382px; position: absolute">
-                <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_separador_ultima}</div>
-              </div>
-              <div style="width: 154.01px; height: 25px; left: 15.63px; top: 410px; position: absolute">
-                <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_separador_ultima_data}</div>
-              </div>
-              <div style="width: 154.01px; height: 25px; left: 173.92px; top: 382px; position: absolute">
-                <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_combustivel_ultima}</div>
-              </div>
-              <div style="width: 154.01px; height: 25px; left: 172.85px; top: 410px; position: absolute">
-                <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_combustivel_ultima_data}</div>
-              </div>
-              
-              <div style="width: 289.84px; height: 38px; left: 20.97px; top: 38px; position: absolute">
-                <div style="width: 289.84px; height: 38px; left: 0px; top: 0px; position: absolute">
-                  <div style="width: 289.84px; height: 38px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px"></div>
-               
-                </div>
-                <div style="width: 272.73px; height: 38px; left: 8.56px; top: ${top}px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 700; word-wrap: break-word">${name_equipamento}</div>
-              
-              
-              
-              
-                </div>
-              <div style="width: 272.73px; height: 0px; left: 35px; top: 461px; position: absolute; border: 1.40px black solid"></div>
-              <div style="width: 308.03px; height: 0px; left: 16.26px; top: 283.48px; position: absolute; border: 1.40px black solid"></div>
-              <div style="width: 64.17px; left: 141px; top: 463px; position: absolute; text-align: center; color: black; font-size: 11px; font-family: Inter; font-weight: 300; line-height: 12px; word-wrap: break-word">Supervisor</div>
-              <div style="width: 308px; height: 12px; left: 17px; top: 266px; position: absolute; text-align: center; color: black; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Filtros</div>
-              <div style="width: 309.10px; height: 11px; left: 16.70px; top: 205px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">Última Troca de óleo</div>
-              <div style="width: 113px; height: 11.76px; left: 10px; top: 198px; position: absolute; transform: rotate(-90deg); transform-origin: 0 0; text-align: center; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">${modelo}</div>
-              <div style="width: 149.74px; height: 18px; left: 16.70px; top: 287px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar interno</div>
-              <div style="width: 149.74px; height: 18px; left: 174.99px; top: 287px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar externo</div>
-              
-              <div style="width: 158.29px; height: 29px; left: 19.90px; top: 0px; position: absolute; text-align: center; color: #FF0000; font-size: 24px; font-family: Inter; font-weight: 600; word-wrap: break-word">Última troca</div>
-              <div style="width: 149.74px; height: 18px; left: 177.13px; top: 364px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Combustível</div>
-              <div style="width: 149.74px; height: 18px; left: 16.70px; top: 364px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Separ. d’ água</div>
-            </div>
-            <div style="width: 21px; height: 14px; left: 120px; top: 296px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-            
-           
-           
-              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 1px; top: 0px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                  
-              <image id="image0" width="517" height="482" x="0" y="0"
-              href="data:image/png;base64,${filtro_internobase64}"/>
-          </svg>
-              </div>
-              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="rotate(55)"  y="0px"  style="width: 24px; height: 24px; left: 130px; top: 370px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                  
-              <image id="image0" width="517" height="482" x="0" y="0"
-              href="data:image/png;base64,${filtro_separadobase64}"/>
-          </svg>
-            
-            
-            <div style="width: 21px; height: 14px; left: 279px; top: 296px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-             
-              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 2px; top: 0px; position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                  
-              <image id="image0" width="517" height="482" x="0" y="0"
-              href="data:image/png;base64,${filtro_internobase64}"/>
-          </svg>
-              </div>
-            <div style="padding-top: 6px; padding-bottom: 4px; padding-right: 4px; left: 285px; top: 366px; position: absolute; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-             
-              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="rotate(185)" y="0px" style="width: 35px; height: 40px;" viewBox="0 0 95 38" enable-background="new 0 0 95 38" xml:space="preserve"> 
-                  
-              <image id="image0"  width="104" height="104" x="0" y="0"
-              href="data:image/png;base64,${filtro_combustivelbase64}" />
-              </svg>
-              
-  
-  
-  
-              </div>
-            <div style="width: 82.06px; height: 39.47px; left: 232px; top: 5px; position: absolute">
-              <div style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; background: #FBFDFF; border-radius: 10px"></div>
-              <img style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; border-radius: 10px" src="${url_imagem_equipamento}" />
-           
-              </div>
-          </div>
+      
+     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-          
-          <div style="width: 336px; height: 492px; position: relative; background: linear-gradient(180deg, rgba(127.09, 156.99, 254.15, 0.79) 0%, #7F9DFE 74%); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);display: inline-block;border: 1px; border-style: dashed">
-            <div style="width: 329px; height: 475px; left: 0px; top: 10px; position: absolute">
-              <div style="width: 329px; height: 475px; left: 0px; top: 0px; position: absolute">
-                <div style="width: 313.34px; height: 34px; left: 14.58px; top: 222px; position: absolute">
-                  <div style="width: 313.34px; height: 34px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: white; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                  <div style="width: 305.83px; height: 26px; left: 4.29px; top: 4px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 25px; font-family: Inter; font-weight: 400; word-wrap: break-word">${proxima_troca_oleo_hor}</div>
-                </div>
-                <div style="width: 154.52px; height: 25px; left: 15.66px; top: 333px; position: absolute">
-                  <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                  <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_interno_proxima}</div>
-                </div>
-                <div style="width: 154.52px; height: 25px; left: 15.66px; top: 390px; position: absolute">
-                  <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                  <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_separador_proxima}</div>
-                </div>
-                <div style="width: 154.52px; height: 25px; left: 174.47px; top: 390px; position: absolute">
-                  <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                  <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_combustivel_proxima}</div>
-                </div>
-                <div style="width: 154.52px; height: 25px; left: 174.47px; top: 333px; position: absolute">
-                  <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                  <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_externo_proxima}</div>
-                </div>
-                <div style="width: 162.04px; height: 25px; left: 165.36px; top: 117px; position: absolute">
-               
-                </div>
-                <div style="width: 309.05px; height: 0px; left: 16.70px; top: 283.48px; position: absolute; border: 1.40px black solid"></div>
-                <div style="width: 273.64px; height: 0px; left: 35px; top: 461px; position: absolute; border: 1.40px black solid"></div>
-                <div style="width: 309.05px; height: 11px; left: 18.88px; top: 205px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">Próxima Troca de óleo</div>
-                <div style="width: 113px; height: 11.80px; left: 10px; top: 198px; position: absolute; transform: rotate(-90deg); transform-origin: 0 0; text-align: center; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">${modelo}</div>
-                <div style="width: 309px; height: 13px; left: 17px; top: 265px; position: absolute; text-align: center; color: black; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Filtros</div>
-                <div style="width: 64.39px; left: 141px; top: 463px; position: absolute; text-align: center; color: black; font-size: 11px; font-family: Inter; font-weight: 300; line-height: 12px; word-wrap: break-word">Supervisor</div>
-                <div style="width: 150.23px; height: 18px; left: 17.80px; top: 315px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar interno</div>
-                <div style="width: 150.23px; height: 18px; left: 176.62px; top: 315px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar externo</div>
-                <div style="width: 175.99px; height: 29px; left: 23.17px; top: 0px; position: absolute; text-align: center; color: #008000; font-size: 24px; font-family: Inter; font-weight: 600; word-wrap: break-word">Próxima troca</div>
-  
-                <div style="width: 150.23px; height: 18px; left: 176.62px; top: 372px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Combustível</div>
-                <div style="width: 150.23px; height: 18px; left: 17.80px; top: 372px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Separ. d’ água</div>
-              </div>
-              <div style="width: 22.33px; height: 14px; left: 123.13px; top: 314px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-             
-             
-              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 0px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                  
-              <image id="image0" width="517" height="482" x="0" y="0"
-              href="data:image/png;base64,${filtro_internobase64}"/>
-          </svg>
-              
-          <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 159px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                  
-          <image id="image0" width="517" height="482" x="0" y="0"
-          href="data:image/png;base64,${filtro_internobase64}"/>
-      </svg>
-             
-              </div>
-              <div style="width: 22.33px; height: 14px; left: 276.03px; top: 314px; position: absolute"></div>
-              <div style="width: 20.70px; height: 59px; padding-top: 0px; padding-bottom: 0px; padding-right: 4.25px; left: 288.79px; top: 359px; position: absolute; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="rotate(185)" y="0px" style="width: 39px; height: 50px;" viewBox="0 0 107 52" enable-background="new 0 0 107 52" xml:space="preserve"> 
-                  
-              <image id="image0"  width="104" height="104" x="0" y="0"
-              href="data:image/png;base64,${filtro_combustivelbase64}" />
-              </svg>
-              
-  
-             
-              
-              </div>
-              <div style="width: 288.11px; height: 38px; left: 20.88px; top: 38px; position: absolute">
-                <div style="width: 288.11px; height: 38px; left: 0px; top: 0px; position: absolute">
-                  <div style="width: 288.11px; height: 38px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px"></div>
-                  <div style="width: 277.12px; height: 28.88px; left: 8.09px; top: 4.56px; position: absolute; opacity: 0.90; text-align: center; color: #FCFDFF; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Terça - feira</div>
-                </div>
-                <div style="width: 271.10px; height: 38px; left: 8.50px; top: ${top}px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 700; word-wrap: break-word;">${name_equipamento}</div>
-                
-            </div>
-            </div>
-         
-            
-            <div style="width: 21px; height: 14px; left: 129px; top: 384px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-           
-               <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" transform="rotate(55)" y="0px" style="width: 402px; height: 400px" viewBox="0 0 517 682" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                  
-              <image id="image0"  width="624" height="524" x="0" y="0"
-              href="data:image/png;base64,${filtro_separadobase64}" />
-              </svg>
-           
-            </div>
-            <div style="width: 82.06px; height: 39.47px; left: 232px; top: 5px; position: absolute">
-              <div style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; background: #FBFDFF; border-radius: 10px"></div>
-             
-              <img style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; border-radius: 10px" src="${url_imagem_equipamento}" />
-            </div>
-           
-    
-          ${cod_dia_lub(94.8,110)}
-  
-    
-    
-    
-    `;
-  
-   
-        
-        await page.setContent(htmlContent1);
-    
-  
-  
-        const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true,margin:{top:40,left:45} });
-    
-       
 
-        res.setHeader('Content-Disposition', 'attachment; filename=relatorio.pdf');
-        res.contentType("application/pdf");
-        res.send(pdfBuffer);
-        await browser.close();
-      } catch (error) {
-        console.error('Erro ao gerar o relatório:', error);
-        res.status(500).send('Ocorreu um erro ao gerar o relatório');
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        try {
+
+    
+         
+    //gerar-relsconst 
+    browser = await puppeteer.launch({
+    
+      //executablePath: '/usr/bin/google-chrome-stable',
+        // headless: "new",
+       args: ['--no-sandbox', '--disable-setuid-sandbox']
       }
-    });
-
-
-
-
-
-
-app.get('/gerar-rels', async (req, res) => {
-
-const name_equipamento = req.query.nome;
-//  const name_equipamento = name_equipamento1.length;
-  const url_imagem_equipamento = req.query.urlimg;
-  const modelo = req.query.tipo;
-  const val_name_lub_cal = req.query.dialubri;
-  const paramsval_name_lub_cal = req.query.paramlubr;
-  const gerulr = req.query.gerulr;
-
-
-  const ultima_troca_oleo_hor = parseInt(req.query.ult_oleo, 0) || 0;
-
-  
-  const param7 = parseInt(req.query.ult_oleo_intevalo, 0) || 0;
- 
-
-
-
-
-
-
-   const filtro_ar_interno_ultima = 	req.query.filtro_ar_interno_ultima  
-  const filtro_ar_externo_ultima = 	req.query.filtro_ar_externo_ultima  
-  const filtro_separador_ultima = 	req.query.filtro_separador_ultima  
-  const filtro_combustivel_ultima =	req.query.filtro_combustivel_ultima 
-     
-  const filtro_ar_interno_proxima =	req.query.filtro_ar_interno_proxima 
-  const filtro_ar_externo_proxima =	req.query.filtro_ar_externo_proxima 
-  const filtro_separador_proxima = 	req.query.filtro_separador_proxima  
- const filtro_combustivel_proxima = 	req.query.	 filtro_combustivel_proxima  
-     
-  const filtro_ar_interno_ultima_data = 	req.query.filtro_ar_interno_ultima_data  
-  const filtro_ar_externo_ultima_data = 	req.query.filtro_ar_externo_ultima_data  
-  const filtro_separador_ultima_data = 	req.query.filtro_separador_ultima_data  
-  const filtro_combustivel_ultima_data = 	req.query.filtro_combustivel_ultima_data  
- 
-
-
-
-
-  
-  const proxima_troca_oleo_hor = ultima_troca_oleo_hor + param7;
-
-  const top=10
-
-
-
- 
-
-
- 
-
- 
-
- const options = {
-  margin: 1,}
- 
- if (!gerulr) {
-   url_imagem_qr = ""; // Define como uma string vazia se gerulr for nulo ou indefinido
-} else {
-
-
-
-
-  qr.toFile('public/upload/qr/meu_qr_code.png', gerulr, options, (err) => {
-    if (err) throw err;
-
-  });
-
- url_imagem_qr = "http://191.252.109.142:8080/imagem/qr/meu_qr_code.png";
-}
-  
-  
- 
-
-
-
-
-
-
-
-
-
-
-    try {
-
-     
-//gerar-relsconst 
-browser = await puppeteer.launch({
-
-  //executablePath: '/usr/bin/google-chrome-stable',
-    // headless: "new",
-   args: ['--no-sandbox', '--disable-setuid-sandbox']
-  }
-  );
-      //const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      
-     const cod_dia_lub = (padi = 86,padi1 = 100) => {
-
-
-      if (paramsval_name_lub_cal == "1") {
-
-        return    ` <div style="width: 120.86px; height: 113px; left: 114.60px; top: ${padi}px; position: absolute">
-        <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
-        <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
-     
-     
-        </div> `;
-       
-       }else if(paramsval_name_lub_cal == "2"){
-        return     `<div style="width: 161.50px; height: 25px; left: 165.36px; top: ${padi1 + 17}px; position: absolute">
-        <div style="width: 161.50px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-        
-        <div style="width: 153.65px; height: 19px; left: 4.49px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">${val_name_lub_cal}</div>
-       </div>
-       
-       
-       <div style="width: 158.29px; height: 17px; left: 168.57px; top: ${padi1}px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Dia lubrificar</div>
-       <div style="width: 120.86px; height: 113px; left: 30.60px; top: ${padi}px; position: absolute">
-              <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
-              <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
-           
-           
-              </div>
-       
-       `;
-  
-      
-       }else if(paramsval_name_lub_cal == "3"){
-        return     `<div style="width: 161.50px; height: 25px; left: 165.36px; top: ${padi1 + 17}px; position: absolute">
-        <div style="width: 161.50px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-        
-        <div style="width: 153.65px; height: 19px; left: 4.49px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">${val_name_lub_cal}</div>
-       </div>
-       
-       
-       <div style="width: 158.29px; height: 17px; left: 168.57px; top: ${padi1 + 17}px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Dia lubrificar</div>
-       <div style="width: 120.86px; height: 113px; left: 30.60px; top: ${padi}px; position: absolute">
-              <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
-              <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
-           
-           
-              </div>`;
-       
-       
-       
-       
-       
-      }else{  
-        return    `<div style="width: 161.50px; height: 25px; left: 165.36px; top: ${padi1 + 17}px; position: absolute">
-       <div style="width: 161.50px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-       
-       <div style="width: 153.65px; height: 19px; left: 4.49px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">${val_name_lub_cal}</div>
-      </div>
-      
-      
-      <div style="width: 158.29px; height: 17px; left: 168.57px; top: ${padi + 17}px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Dia Calibrar e lubrificar</div>
-      <div style="width: 120.86px; height: 113px; left: 30.60px; top: ${padi}px; position: absolute">
-              <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
-              <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
-           
-           
-              </div>`;
-     
-  }
-
-
-     }
-            const htmlContent1 = `
-      <div style="width: 336px; height: 492px; position: relative; background: linear-gradient(180deg, rgba(127.09, 156.99, 254.15, 0.79) 0%, #7F9DFE 74%); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);display: inline-block;border: 1px; border-style: dashed">
-          <div style="width: 329px; height: 475px; left: 0px; top: 10px; position: absolute">
-            <div style="width: 154.01px; height: 25px; left: 14.56px; top: 305px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_interno_ultima}</div>
-            </div>
-            <div style="width: 153.48px; height: 25px; left: 172.31px; top: 305px; position: absolute">
-              <div style="width: 153.48px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.02px; height: 19px; left: 4.26px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_externo_ultima}</div>
-            </div>
-            <div style="width: 312.30px; height: 34px; left: 16.70px; top: 222px; position: absolute">
-              <div style="width: 312.30px; height: 34px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 304.82px; height: 26px; left: 4.28px; top: 4px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 25px; font-family: Inter; font-weight: 400; word-wrap: break-word">${ultima_troca_oleo_hor}</div>
-            </div>
-            <div style="width: 154.01px; height: 25px; left: 172.85px; top: 333px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_externo_ultima_data}</div>
-            </div>
-
-
-
-      
+      );
+          //const browser = await puppeteer.launch();
+          const page = await browser.newPage();
+          
+         const cod_dia_lub = (padi = 86,padi1 = 100) => {
+    
+    
+          if (paramsval_name_lub_cal == "1") {
+    
+            return    ` <div style="width: 120.86px; height: 113px; left: 114.60px; top: ${padi}px; position: absolute">
+            <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
+            <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
          
-            ${cod_dia_lub()}
-
-
-
-
-
-            <div style="width: 154.01px; height: 25px; left: 14.56px; top: 333px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_interno_ultima_data}</div>
-            </div>
-            <div style="width: 154.01px; height: 25px; left: 15.63px; top: 382px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_separador_ultima}</div>
-            </div>
-            <div style="width: 154.01px; height: 25px; left: 15.63px; top: 410px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_separador_ultima_data}</div>
-            </div>
-            <div style="width: 154.01px; height: 25px; left: 173.92px; top: 382px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_combustivel_ultima}</div>
-            </div>
-            <div style="width: 154.01px; height: 25px; left: 172.85px; top: 410px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_combustivel_ultima_data}</div>
-            </div>
+         
+            </div> `;
+           
+           }else if(paramsval_name_lub_cal == "2"){
+            return     `<div style="width: 161.50px; height: 25px; left: 165.36px; top: ${padi1 + 17}px; position: absolute">
+            <div style="width: 161.50px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
             
-            <div style="width: 289.84px; height: 38px; left: 20.97px; top: 38px; position: absolute">
-              <div style="width: 289.84px; height: 38px; left: 0px; top: 0px; position: absolute">
-                <div style="width: 289.84px; height: 38px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px"></div>
-             
-              </div>
-              <div style="width: 272.73px; height: 38px; left: 8.56px; top: ${top}px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 700; word-wrap: break-word">${name_equipamento}</div>
+            <div style="width: 153.65px; height: 19px; left: 4.49px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">${val_name_lub_cal}</div>
+           </div>
+           
+           
+           <div style="width: 158.29px; height: 17px; left: 168.57px; top: ${padi1}px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Dia lubrificar</div>
+           <div style="width: 120.86px; height: 113px; left: 30.60px; top: ${padi}px; position: absolute">
+                  <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
+                  <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
+               
+               
+                  </div>
+           
+           `;
+      
+          
+           }else if(paramsval_name_lub_cal == "3"){
+            return      `<div style="width: 161.50px; height: 25px; left: 165.36px; top: ${padi1 + 17}px; position: absolute">
+            <div style="width: 161.50px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
             
-            
-            
-            
-              </div>
-            <div style="width: 272.73px; height: 0px; left: 35px; top: 461px; position: absolute; border: 1.40px black solid"></div>
-            <div style="width: 308.03px; height: 0px; left: 16.26px; top: 283.48px; position: absolute; border: 1.40px black solid"></div>
-            <div style="width: 64.17px; left: 141px; top: 463px; position: absolute; text-align: center; color: black; font-size: 11px; font-family: Inter; font-weight: 300; line-height: 12px; word-wrap: break-word">Supervisor</div>
-            <div style="width: 308px; height: 12px; left: 17px; top: 266px; position: absolute; text-align: center; color: black; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Filtros</div>
-            <div style="width: 309.10px; height: 11px; left: 16.70px; top: 205px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">Última Troca de óleo</div>
-            <div style="width: 113px; height: 11.76px; left: 10px; top: 198px; position: absolute; transform: rotate(-90deg); transform-origin: 0 0; text-align: center; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">${modelo}</div>
-            <div style="width: 149.74px; height: 18px; left: 16.70px; top: 287px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar interno</div>
-            <div style="width: 149.74px; height: 18px; left: 174.99px; top: 287px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar externo</div>
-            
-            <div style="width: 158.29px; height: 29px; left: 19.90px; top: 0px; position: absolute; text-align: center; color: #FF0000; font-size: 24px; font-family: Inter; font-weight: 600; word-wrap: break-word">Última troca</div>
-            <div style="width: 149.74px; height: 18px; left: 177.13px; top: 364px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Combustível</div>
-            <div style="width: 149.74px; height: 18px; left: 16.70px; top: 364px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Separ. d’ água</div>
+            <div style="width: 153.65px; height: 19px; left: 4.49px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">${val_name_lub_cal}</div>
+           </div>
+           
+           
+           <div style="width: 158.29px; height: 17px; left: 168.57px; top: ${padi1}px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Dia Calibragem</div>
+           <div style="width: 120.86px; height: 113px; left: 30.60px; top: ${padi}px; position: absolute">
+                  <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
+                  <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
+               
+               
+                  
+                  </div>`;
+           
+           
+           
+           
+           
+          }else{  
+            return    `<div style="width: 161.50px; height: 25px; left: 165.36px; top: ${padi1 + 17}px; position: absolute">
+           <div style="width: 161.50px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+           
+           <div style="width: 153.65px; height: 19px; left: 4.49px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">${val_name_lub_cal}</div>
           </div>
-          <div style="width: 21px; height: 14px; left: 120px; top: 296px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
           
+          
+          <div style="width: 158.29px; height: 17px; left: 168.57px; top: ${padi + 17}px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Dia Calibrar e lubrificar</div>
+          <div style="width: 120.86px; height: 113px; left: 30.60px; top: ${padi}px; position: absolute">
+                  <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
+                  <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
+               
+               
+                  </div>`;
          
-         
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 1px; top: 0px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                
-            <image id="image0" width="517" height="482" x="0" y="0"
-            href="data:image/png;base64,${filtro_internobase64}"/>
-        </svg>
-            </div>
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="rotate(55)"  y="0px"  style="width: 24px; height: 24px; left: 130px; top: 370px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                
-            <image id="image0" width="517" height="482" x="0" y="0"
-            href="data:image/png;base64,${filtro_separadobase64}"/>
-        </svg>
+      }
+    
+    
+         }
+                const htmlContent1 = `
+          <div style="width: 336px; height: 492px; position: relative; background: linear-gradient(180deg, rgba(127.09, 156.99, 254.15, 0.79) 0%, #7F9DFE 74%); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);display: inline-block;border: 1px; border-style: dashed">
+              <div style="width: 329px; height: 475px; left: 0px; top: 10px; position: absolute">
+                <div style="width: 154.01px; height: 25px; left: 14.56px; top: 305px; position: absolute">
+                  <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                  <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_interno_ultima}</div>
+                </div>
+                <div style="width: 153.48px; height: 25px; left: 172.31px; top: 305px; position: absolute">
+                  <div style="width: 153.48px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                  <div style="width: 146.02px; height: 19px; left: 4.26px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_externo_ultima}</div>
+                </div>
+                <div style="width: 312.30px; height: 34px; left: 16.70px; top: 222px; position: absolute">
+                  <div style="width: 312.30px; height: 34px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                  <div style="width: 304.82px; height: 26px; left: 4.28px; top: 4px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 25px; font-family: Inter; font-weight: 400; word-wrap: break-word">${ultima_troca_oleo_hor}</div>
+                </div>
+                <div style="width: 154.01px; height: 25px; left: 172.85px; top: 333px; position: absolute">
+                  <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                  <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_externo_ultima_data}</div>
+                </div>
+    
+    
+    
           
-          
-          <div style="width: 21px; height: 14px; left: 279px; top: 296px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-           
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 2px; top: 0px; position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                
-            <image id="image0" width="517" height="482" x="0" y="0"
-            href="data:image/png;base64,${filtro_internobase64}"/>
-        </svg>
-            </div>
-          <div style="padding-top: 6px; padding-bottom: 4px; padding-right: 4px; left: 285px; top: 366px; position: absolute; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-           
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="rotate(185)" y="0px" style="width: 35px; height: 40px;" viewBox="0 0 95 38" enable-background="new 0 0 95 38" xml:space="preserve"> 
-                
-            <image id="image0"  width="104" height="104" x="0" y="0"
-            href="data:image/png;base64,${filtro_combustivelbase64}" />
-            </svg>
-          
-            </div>
-          <div style="width: 82.06px; height: 39.47px; left: 232px; top: 5px; position: absolute">
-            <div style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; background: #FBFDFF; border-radius: 10px"></div>
-            <img style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; border-radius: 10px" src="${url_imagem_equipamento}" />
-         
-            </div>
-        </div>  
-        
-        <div style="width: 336px; height: 492px; position: relative; background: linear-gradient(180deg, rgba(127.09, 156.99, 254.15, 0.79) 0%, #7F9DFE 74%); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);display: inline-block;border: 1px; border-style: dashed">
-          <div style="width: 329px; height: 475px; left: 0px; top: 10px; position: absolute">
-            <div style="width: 329px; height: 475px; left: 0px; top: 0px; position: absolute">
-              <div style="width: 313.34px; height: 34px; left: 14.58px; top: 222px; position: absolute">
-                <div style="width: 313.34px; height: 34px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: white; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 305.83px; height: 26px; left: 4.29px; top: 4px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 25px; font-family: Inter; font-weight: 400; word-wrap: break-word">${proxima_troca_oleo_hor}</div>
-              </div>
-              <div style="width: 154.52px; height: 25px; left: 15.66px; top: 333px; position: absolute">
-                <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_interno_proxima}</div>
-              </div>
-              <div style="width: 154.52px; height: 25px; left: 15.66px; top: 390px; position: absolute">
-                <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_separador_proxima}</div>
-              </div>
-              <div style="width: 154.52px; height: 25px; left: 174.47px; top: 390px; position: absolute">
-                <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_combustivel_proxima}</div>
-              </div>
-              <div style="width: 154.52px; height: 25px; left: 174.47px; top: 333px; position: absolute">
-                <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_externo_proxima}</div>
-              </div>
-              <div style="width: 162.04px; height: 25px; left: 165.36px; top: 117px; position: absolute">
              
+                ${cod_dia_lub()}
+    
+    
+    
+    
+    
+                <div style="width: 154.01px; height: 25px; left: 14.56px; top: 333px; position: absolute">
+                  <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                  <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_interno_ultima_data}</div>
+                </div>
+                <div style="width: 154.01px; height: 25px; left: 15.63px; top: 382px; position: absolute">
+                  <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                  <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_separador_ultima}</div>
+                </div>
+                <div style="width: 154.01px; height: 25px; left: 15.63px; top: 410px; position: absolute">
+                  <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                  <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_separador_ultima_data}</div>
+                </div>
+                <div style="width: 154.01px; height: 25px; left: 173.92px; top: 382px; position: absolute">
+                  <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                  <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_combustivel_ultima}</div>
+                </div>
+                <div style="width: 154.01px; height: 25px; left: 172.85px; top: 410px; position: absolute">
+                  <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                  <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_combustivel_ultima_data}</div>
+                </div>
+                
+                <div style="width: 289.84px; height: 38px; left: 20.97px; top: 38px; position: absolute">
+                  <div style="width: 289.84px; height: 38px; left: 0px; top: 0px; position: absolute">
+                    <div style="width: 289.84px; height: 38px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px"></div>
+                 
+                  </div>
+                  <div style="width: 272.73px; height: 38px; left: 8.56px; top: ${top}px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 700; word-wrap: break-word">${name_equipamento}</div>
+                
+                
+                
+                
+                  </div>
+                <div style="width: 272.73px; height: 0px; left: 35px; top: 461px; position: absolute; border: 1.40px black solid"></div>
+                <div style="width: 308.03px; height: 0px; left: 16.26px; top: 283.48px; position: absolute; border: 1.40px black solid"></div>
+                <div style="width: 64.17px; left: 141px; top: 463px; position: absolute; text-align: center; color: black; font-size: 11px; font-family: Inter; font-weight: 300; line-height: 12px; word-wrap: break-word">Supervisor</div>
+                <div style="width: 308px; height: 12px; left: 17px; top: 266px; position: absolute; text-align: center; color: black; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Filtros</div>
+                <div style="width: 309.10px; height: 11px; left: 16.70px; top: 205px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">Última Troca de óleo</div>
+                <div style="width: 113px; height: 11.76px; left: 10px; top: 198px; position: absolute; transform: rotate(-90deg); transform-origin: 0 0; text-align: center; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">${modelo}</div>
+                <div style="width: 149.74px; height: 18px; left: 16.70px; top: 287px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar interno</div>
+                <div style="width: 149.74px; height: 18px; left: 174.99px; top: 287px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar externo</div>
+                
+                <div style="width: 158.29px; height: 29px; left: 19.90px; top: 0px; position: absolute; text-align: center; color: #FF0000; font-size: 24px; font-family: Inter; font-weight: 600; word-wrap: break-word">Última troca</div>
+                <div style="width: 149.74px; height: 18px; left: 177.13px; top: 364px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Combustível</div>
+                <div style="width: 149.74px; height: 18px; left: 16.70px; top: 364px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Separ. d’ água</div>
               </div>
-              <div style="width: 309.05px; height: 0px; left: 16.70px; top: 283.48px; position: absolute; border: 1.40px black solid"></div>
-              <div style="width: 273.64px; height: 0px; left: 35px; top: 461px; position: absolute; border: 1.40px black solid"></div>
-              <div style="width: 309.05px; height: 11px; left: 18.88px; top: 205px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">Próxima Troca de óleo</div>
-              <div style="width: 113px; height: 11.80px; left: 10px; top: 198px; position: absolute; transform: rotate(-90deg); transform-origin: 0 0; text-align: center; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">${modelo}</div>
-              <div style="width: 309px; height: 13px; left: 17px; top: 265px; position: absolute; text-align: center; color: black; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Filtros</div>
-              <div style="width: 64.39px; left: 141px; top: 463px; position: absolute; text-align: center; color: black; font-size: 11px; font-family: Inter; font-weight: 300; line-height: 12px; word-wrap: break-word">Supervisor</div>
-              <div style="width: 150.23px; height: 18px; left: 17.80px; top: 315px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar interno</div>
-              <div style="width: 150.23px; height: 18px; left: 176.62px; top: 315px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar externo</div>
-              <div style="width: 175.99px; height: 29px; left: 23.17px; top: 0px; position: absolute; text-align: center; color: #008000; font-size: 24px; font-family: Inter; font-weight: 600; word-wrap: break-word">Próxima troca</div>
-
-              <div style="width: 150.23px; height: 18px; left: 176.62px; top: 372px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Combustível</div>
-              <div style="width: 150.23px; height: 18px; left: 17.80px; top: 372px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Separ. d’ água</div>
-            </div>
-            <div style="width: 22.33px; height: 14px; left: 123.13px; top: 314px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-           
-           
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 0px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                
-            <image id="image0" width="517" height="482" x="0" y="0"
-            href="data:image/png;base64,${filtro_internobase64}"/>
-        </svg>
-            
-        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 159px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                
-        <image id="image0" width="517" height="482" x="0" y="0"
-        href="data:image/png;base64,${filtro_internobase64}"/>
-    </svg>
-           
-            </div>
-            <div style="width: 22.33px; height: 14px; left: 276.03px; top: 314px; position: absolute"></div>
-            <div style="width: 20.70px; height: 59px; padding-top: 0px; padding-bottom: 0px; padding-right: 4.25px; left: 288.79px; top: 359px; position: absolute; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="rotate(185)" y="0px" style="width: 39px; height: 50px;" viewBox="0 0 107 52" enable-background="new 0 0 107 52" xml:space="preserve"> 
-                
-            <image id="image0"  width="104" height="104" x="0" y="0"
-            href="data:image/png;base64,${filtro_combustivelbase64}" />
-            </svg>
-     
-            </div>
-            <div style="width: 288.11px; height: 38px; left: 20.88px; top: 38px; position: absolute">
-              <div style="width: 288.11px; height: 38px; left: 0px; top: 0px; position: absolute">
-                <div style="width: 288.11px; height: 38px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px"></div>
-                <div style="width: 277.12px; height: 28.88px; left: 8.09px; top: 4.56px; position: absolute; opacity: 0.90; text-align: center; color: #FCFDFF; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Terça - feira</div>
-              </div>
-              <div style="width: 271.10px; height: 38px; left: 8.50px; top: ${top}px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 700; word-wrap: break-word;">${name_equipamento}</div>
+              <div style="width: 21px; height: 14px; left: 120px; top: 296px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
               
-          </div>
-          </div>
-       
-          
-          <div style="width: 21px; height: 14px; left: 129px; top: 384px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-         
-             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" transform="rotate(55)" y="0px" style="width: 402px; height: 400px" viewBox="0 0 517 682" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                
-            <image id="image0"  width="624" height="524" x="0" y="0"
-            href="data:image/png;base64,${filtro_separadobase64}" />
-            </svg>
-         
-          </div>
-          <div style="width: 82.06px; height: 39.47px; left: 232px; top: 5px; position: absolute">
-            <div style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; background: #FBFDFF; border-radius: 10px"></div>
-           
-            <img style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; border-radius: 10px" src="${url_imagem_equipamento}" />
-          </div>
-         
-  
-        ${cod_dia_lub(94.8,110)}
-
-  
-  
-  
-  `;
-
- 
-      
-      await page.setContent(htmlContent1);
-      const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true,margin:{top:40,left:45} });
-  
-      await browser.close();
-  
-      res.contentType("application/pdf");
-      res.send(pdfBuffer);
-    } catch (error) {
-      console.error('Erro ao gerar o relatório:', error);
-      res.status(500).send('Ocorreu um erro ao gerar o relatório');
-    }
-  });
-
-
-  app.post('/gerar-rels', async (req, res) => {
-
-const name_equipamento = req.query.nome;
-//  const name_equipamento = name_equipamento1.length;
-  const url_imagem_equipamento = req.query.urlimg;
-  const modelo = req.query.tipo;
-  const val_name_lub_cal = req.query.dialubri;
-  const paramsval_name_lub_cal = req.query.paramlubr;
-  const gerulr = req.query.gerulr;
-
-
-  const ultima_troca_oleo_hor = parseInt(req.query.ult_oleo, 0) || 0;
-
-  
-  const param7 = parseInt(req.query.ult_oleo_intevalo, 0) || 0;
- 
-
-
-
-
-
-
-   const filtro_ar_interno_ultima = 	req.query.filtro_ar_interno_ultima  
-  const filtro_ar_externo_ultima = 	req.query.filtro_ar_externo_ultima  
-  const filtro_separador_ultima = 	req.query.filtro_separador_ultima  
-  const filtro_combustivel_ultima =	req.query.filtro_combustivel_ultima 
-     
-  const filtro_ar_interno_proxima =	req.query.filtro_ar_interno_proxima 
-  const filtro_ar_externo_proxima =	req.query.filtro_ar_externo_proxima 
-  const filtro_separador_proxima = 	req.query.filtro_separador_proxima  
- const filtro_combustivel_proxima = 	req.query.	 filtro_combustivel_proxima  
-     
-  const filtro_ar_interno_ultima_data = 	req.query.filtro_ar_interno_ultima_data  
-  const filtro_ar_externo_ultima_data = 	req.query.filtro_ar_externo_ultima_data  
-  const filtro_separador_ultima_data = 	req.query.filtro_separador_ultima_data  
-  const filtro_combustivel_ultima_data = 	req.query.filtro_combustivel_ultima_data  
- 
-
-
-  console.log(url_imagem_equipamento)
-
-  
-  const proxima_troca_oleo_hor = ultima_troca_oleo_hor + param7;
-const top=10;
-  
-
- const options = {
-  margin: 1,}
- 
- if (!gerulr) {
-   url_imagem_qr = ""; // Define como uma string vazia se gerulr for nulo ou indefinido
-} else {
-
-
-
-
-  qr.toFile('public/upload/qr/meu_qr_code.png', gerulr, options, (err) => {
-    if (err) throw err;
-
-  });
-
- url_imagem_qr = "http://191.252.109.142:8080/imagem/qr/meu_qr_code.png";
-}
-
-    try {
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      
-     const cod_dia_lub = (padi = 86,padi1 = 100) => {
-
-
-      if (paramsval_name_lub_cal == "1") {
-
-        return    ` <div style="width: 120.86px; height: 113px; left: 114.60px; top: ${padi}px; position: absolute">
-        <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
-        <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
-     
-     
-        </div> `;
-       
-       }else if(paramsval_name_lub_cal == "2"){
-        return     `<div style="width: 161.50px; height: 25px; left: 165.36px; top: ${padi1 + 17}px; position: absolute">
-        <div style="width: 161.50px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-        
-        <div style="width: 153.65px; height: 19px; left: 4.49px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">${val_name_lub_cal}</div>
-       </div>
-       
-       
-       <div style="width: 158.29px; height: 17px; left: 168.57px; top: ${padi1}px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Dia lubrificar</div>
-       <div style="width: 120.86px; height: 113px; left: 30.60px; top: ${padi}px; position: absolute">
-              <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
-              <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
-           
-           
-              </div>
-       
-       `;
-  
-      
-       }else if(paramsval_name_lub_cal == "3"){
-        return     `<div style="width: 161.50px; height: 25px; left: 165.36px; top: ${padi1 + 17}px; position: absolute">
-        <div style="width: 161.50px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-        
-        <div style="width: 153.65px; height: 19px; left: 4.49px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">${val_name_lub_cal}</div>
-       </div>
-       
-       
-       <div style="width: 158.29px; height: 17px; left: 168.57px; top: ${padi1 + 17}px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Dia lubrificar</div>
-       <div style="width: 120.86px; height: 113px; left: 30.60px; top: ${padi}px; position: absolute">
-              <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
-              <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
-           
-           
-              </div>`;
-       
-       
-       
-       
-       
-      }else{  
-        return    `<div style="width: 161.50px; height: 25px; left: 165.36px; top: ${padi1 + 17}px; position: absolute">
-       <div style="width: 161.50px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-       
-       <div style="width: 153.65px; height: 19px; left: 4.49px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">${val_name_lub_cal}</div>
-      </div>
-      
-      
-      <div style="width: 158.29px; height: 17px; left: 168.57px; top: ${padi + 17}px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Dia Calibrar e lubrificar</div>
-      <div style="width: 120.86px; height: 113px; left: 30.60px; top: ${padi}px; position: absolute">
-              <div style="width: 120.86px; height: 113px; left: 0px; top: 0px; position: absolute; background: #F7FAFF; border-radius: 10px; border: 1.90px rgba(0, 0, 0, 0.67) solid"></div>
-              <img style="width: 101.72px; height: 95.11px; left: 11.06px; top: 8.48px; position: absolute" src="${url_imagem_qr}" />
-           
-           
-              </div>`;
-     
-  }
-
-
-     }
-            const htmlContent1 = `
-      <div style="width: 336px; height: 492px; position: relative; background: linear-gradient(180deg, rgba(127.09, 156.99, 254.15, 0.79) 0%, #7F9DFE 74%); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);display: inline-block;border: 1px; border-style: dashed">
-          <div style="width: 329px; height: 475px; left: 0px; top: 10px; position: absolute">
-            <div style="width: 154.01px; height: 25px; left: 14.56px; top: 305px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_interno_ultima}</div>
-            </div>
-            <div style="width: 153.48px; height: 25px; left: 172.31px; top: 305px; position: absolute">
-              <div style="width: 153.48px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.02px; height: 19px; left: 4.26px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_externo_ultima}</div>
-            </div>
-            <div style="width: 312.30px; height: 34px; left: 16.70px; top: 222px; position: absolute">
-              <div style="width: 312.30px; height: 34px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 304.82px; height: 26px; left: 4.28px; top: 4px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 25px; font-family: Inter; font-weight: 400; word-wrap: break-word">${ultima_troca_oleo_hor}</div>
-            </div>
-            <div style="width: 154.01px; height: 25px; left: 172.85px; top: 333px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_externo_ultima_data}</div>
-            </div>
-
-
-
-      
-         
-            ${cod_dia_lub()}
-
-
-
-
-
-            <div style="width: 154.01px; height: 25px; left: 14.56px; top: 333px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_interno_ultima_data}</div>
-            </div>
-            <div style="width: 154.01px; height: 25px; left: 15.63px; top: 382px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_separador_ultima}</div>
-            </div>
-            <div style="width: 154.01px; height: 25px; left: 15.63px; top: 410px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_separador_ultima_data}</div>
-            </div>
-            <div style="width: 154.01px; height: 25px; left: 173.92px; top: 382px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_combustivel_ultima}</div>
-            </div>
-            <div style="width: 154.01px; height: 25px; left: 172.85px; top: 410px; position: absolute">
-              <div style="width: 154.01px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-              <div style="width: 146.53px; height: 19px; left: 4.28px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_combustivel_ultima_data}</div>
-            </div>
-            
-            <div style="width: 289.84px; height: 38px; left: 20.97px; top: 38px; position: absolute">
-              <div style="width: 289.84px; height: 38px; left: 0px; top: 0px; position: absolute">
-                <div style="width: 289.84px; height: 38px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px"></div>
              
-              </div>
-              <div style="width: 272.73px; height: 38px; left: 8.56px; top: ${top}px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 700; word-wrap: break-word">${name_equipamento}</div>
-            
-            
-            
-            
-              </div>
-            <div style="width: 272.73px; height: 0px; left: 35px; top: 461px; position: absolute; border: 1.40px black solid"></div>
-            <div style="width: 308.03px; height: 0px; left: 16.26px; top: 283.48px; position: absolute; border: 1.40px black solid"></div>
-            <div style="width: 64.17px; left: 141px; top: 463px; position: absolute; text-align: center; color: black; font-size: 11px; font-family: Inter; font-weight: 300; line-height: 12px; word-wrap: break-word">Supervisor</div>
-            <div style="width: 308px; height: 12px; left: 17px; top: 266px; position: absolute; text-align: center; color: black; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Filtros</div>
-            <div style="width: 309.10px; height: 11px; left: 16.70px; top: 205px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">Última Troca de óleo</div>
-            <div style="width: 113px; height: 11.76px; left: 10px; top: 198px; position: absolute; transform: rotate(-90deg); transform-origin: 0 0; text-align: center; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">${modelo}</div>
-            <div style="width: 149.74px; height: 18px; left: 16.70px; top: 287px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar interno</div>
-            <div style="width: 149.74px; height: 18px; left: 174.99px; top: 287px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar externo</div>
-            
-            <div style="width: 158.29px; height: 29px; left: 19.90px; top: 0px; position: absolute; text-align: center; color: #FF0000; font-size: 24px; font-family: Inter; font-weight: 600; word-wrap: break-word">Última troca</div>
-            <div style="width: 149.74px; height: 18px; left: 177.13px; top: 364px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Combustível</div>
-            <div style="width: 149.74px; height: 18px; left: 16.70px; top: 364px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Separ. d’ água</div>
-          </div>
-          <div style="width: 21px; height: 14px; left: 120px; top: 296px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-          
-         
-         
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 1px; top: 0px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                
-            <image id="image0" width="517" height="482" x="0" y="0"
-            href="data:image/png;base64,${filtro_internobase64}"/>
-        </svg>
-            </div>
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="rotate(55)"  y="0px"  style="width: 24px; height: 24px; left: 130px; top: 370px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                
-            <image id="image0" width="517" height="482" x="0" y="0"
-            href="data:image/png;base64,${filtro_separadobase64}"/>
-        </svg>
-          
-          
-          <div style="width: 21px; height: 14px; left: 279px; top: 296px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-           
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 2px; top: 0px; position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                
-            <image id="image0" width="517" height="482" x="0" y="0"
-            href="data:image/png;base64,${filtro_internobase64}"/>
-        </svg>
-            </div>
-          <div style="padding-top: 6px; padding-bottom: 4px; padding-right: 4px; left: 285px; top: 366px; position: absolute; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-           
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="rotate(185)" y="0px" style="width: 35px; height: 40px;" viewBox="0 0 95 38" enable-background="new 0 0 95 38" xml:space="preserve"> 
-                
-            <image id="image0"  width="104" height="104" x="0" y="0"
-            href="data:image/png;base64,${filtro_combustivelbase64}" />
-            </svg>
-          
-            </div>
-          <div style="width: 82.06px; height: 39.47px; left: 232px; top: 5px; position: absolute">
-            <div style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; background: #FBFDFF; border-radius: 10px"></div>
-            <img style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; border-radius: 10px" src="${url_imagem_equipamento}" />
-         
-            </div>
-        </div>  
-        
-        <div style="width: 336px; height: 492px; position: relative; background: linear-gradient(180deg, rgba(127.09, 156.99, 254.15, 0.79) 0%, #7F9DFE 74%); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);display: inline-block;border: 1px; border-style: dashed">
-          <div style="width: 329px; height: 475px; left: 0px; top: 10px; position: absolute">
-            <div style="width: 329px; height: 475px; left: 0px; top: 0px; position: absolute">
-              <div style="width: 313.34px; height: 34px; left: 14.58px; top: 222px; position: absolute">
-                <div style="width: 313.34px; height: 34px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: white; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 305.83px; height: 26px; left: 4.29px; top: 4px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 25px; font-family: Inter; font-weight: 400; word-wrap: break-word">${proxima_troca_oleo_hor}</div>
-              </div>
-              <div style="width: 154.52px; height: 25px; left: 15.66px; top: 333px; position: absolute">
-                <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_interno_proxima}</div>
-              </div>
-              <div style="width: 154.52px; height: 25px; left: 15.66px; top: 390px; position: absolute">
-                <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_separador_proxima}</div>
-              </div>
-              <div style="width: 154.52px; height: 25px; left: 174.47px; top: 390px; position: absolute">
-                <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_combustivel_proxima}</div>
-              </div>
-              <div style="width: 154.52px; height: 25px; left: 174.47px; top: 333px; position: absolute">
-                <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
-                <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_externo_proxima}</div>
-              </div>
-              <div style="width: 162.04px; height: 25px; left: 165.36px; top: 117px; position: absolute">
              
-              </div>
-              <div style="width: 309.05px; height: 0px; left: 16.70px; top: 283.48px; position: absolute; border: 1.40px black solid"></div>
-              <div style="width: 273.64px; height: 0px; left: 35px; top: 461px; position: absolute; border: 1.40px black solid"></div>
-              <div style="width: 309.05px; height: 11px; left: 18.88px; top: 205px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">Próxima Troca de óleo</div>
-              <div style="width: 113px; height: 11.80px; left: 10px; top: 198px; position: absolute; transform: rotate(-90deg); transform-origin: 0 0; text-align: center; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">${modelo}</div>
-              <div style="width: 309px; height: 13px; left: 17px; top: 265px; position: absolute; text-align: center; color: black; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Filtros</div>
-              <div style="width: 64.39px; left: 141px; top: 463px; position: absolute; text-align: center; color: black; font-size: 11px; font-family: Inter; font-weight: 300; line-height: 12px; word-wrap: break-word">Supervisor</div>
-              <div style="width: 150.23px; height: 18px; left: 17.80px; top: 315px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar interno</div>
-              <div style="width: 150.23px; height: 18px; left: 176.62px; top: 315px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar externo</div>
-              <div style="width: 175.99px; height: 29px; left: 23.17px; top: 0px; position: absolute; text-align: center; color: #008000; font-size: 24px; font-family: Inter; font-weight: 600; word-wrap: break-word">Próxima troca</div>
-
-              <div style="width: 150.23px; height: 18px; left: 176.62px; top: 372px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Combustível</div>
-              <div style="width: 150.23px; height: 18px; left: 17.80px; top: 372px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Separ. d’ água</div>
-            </div>
-            <div style="width: 22.33px; height: 14px; left: 123.13px; top: 314px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-           
-           
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 0px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                
-            <image id="image0" width="517" height="482" x="0" y="0"
-            href="data:image/png;base64,${filtro_internobase64}"/>
-        </svg>
-            
-        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 159px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                
-        <image id="image0" width="517" height="482" x="0" y="0"
-        href="data:image/png;base64,${filtro_internobase64}"/>
-    </svg>
-           
-            </div>
-            <div style="width: 22.33px; height: 14px; left: 276.03px; top: 314px; position: absolute"></div>
-            <div style="width: 20.70px; height: 59px; padding-top: 0px; padding-bottom: 0px; padding-right: 4.25px; left: 288.79px; top: 359px; position: absolute; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="rotate(185)" y="0px" style="width: 39px; height: 50px;" viewBox="0 0 107 52" enable-background="new 0 0 107 52" xml:space="preserve"> 
-                
-            <image id="image0"  width="104" height="104" x="0" y="0"
-            href="data:image/png;base64,${filtro_combustivelbase64}" />
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 1px; top: 0px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
+                    
+                <image id="image0" width="517" height="482" x="0" y="0"
+                href="data:image/png;base64,${filtro_internobase64}"/>
             </svg>
-     
-            </div>
-            <div style="width: 288.11px; height: 38px; left: 20.88px; top: 38px; position: absolute">
-              <div style="width: 288.11px; height: 38px; left: 0px; top: 0px; position: absolute">
-                <div style="width: 288.11px; height: 38px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px"></div>
-                <div style="width: 277.12px; height: 28.88px; left: 8.09px; top: 4.56px; position: absolute; opacity: 0.90; text-align: center; color: #FCFDFF; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Terça - feira</div>
-              </div>
-              <div style="width: 271.10px; height: 38px; left: 8.50px; top: ${top}px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 700; word-wrap: break-word;">${name_equipamento}</div>
+                </div>
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="rotate(55)"  y="0px"  style="width: 24px; height: 24px; left: 130px; top: 370px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
+                    
+                <image id="image0" width="517" height="482" x="0" y="0"
+                href="data:image/png;base64,${filtro_separadobase64}"/>
+            </svg>
               
-          </div>
-          </div>
-       
-          
-          <div style="width: 21px; height: 14px; left: 129px; top: 384px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-         
-             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" transform="rotate(55)" y="0px" style="width: 402px; height: 400px" viewBox="0 0 517 682" enable-background="new 0 0 517 482" xml:space="preserve"> 
-                
-            <image id="image0"  width="624" height="524" x="0" y="0"
-            href="data:image/png;base64,${filtro_separadobase64}" />
+              
+              <div style="width: 21px; height: 14px; left: 279px; top: 296px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
+               
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 2px; top: 0px; position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
+                    
+                <image id="image0" width="517" height="482" x="0" y="0"
+                href="data:image/png;base64,${filtro_internobase64}"/>
             </svg>
+                </div>
+              <div style="padding-top: 6px; padding-bottom: 4px; padding-right: 4px; left: 285px; top: 366px; position: absolute; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
+               
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="rotate(185)" y="0px" style="width: 35px; height: 40px;" viewBox="0 0 95 38" enable-background="new 0 0 95 38" xml:space="preserve"> 
+                    
+                <image id="image0"  width="104" height="104" x="0" y="0"
+                href="data:image/png;base64,${filtro_combustivelbase64}" />
+                </svg>
+              
+                </div>
+              <div style="width: 82.06px; height: 39.47px; left: 232px; top: 5px; position: absolute">
+                <div style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; background: #FBFDFF; border-radius: 10px"></div>
+                <img style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; border-radius: 10px" src="${url_imagem_equipamento}" />
+             
+                </div>
+            </div>  
+            
+            <div style="width: 336px; height: 492px; position: relative; background: linear-gradient(180deg, rgba(127.09, 156.99, 254.15, 0.79) 0%, #7F9DFE 74%); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);display: inline-block;border: 1px; border-style: dashed">
+              <div style="width: 329px; height: 475px; left: 0px; top: 10px; position: absolute">
+                <div style="width: 329px; height: 475px; left: 0px; top: 0px; position: absolute">
+                  <div style="width: 313.34px; height: 34px; left: 14.58px; top: 222px; position: absolute">
+                    <div style="width: 313.34px; height: 34px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: white; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                    <div style="width: 305.83px; height: 26px; left: 4.29px; top: 4px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 25px; font-family: Inter; font-weight: 400; word-wrap: break-word">${proxima_troca_oleo_hor}</div>
+                  </div>
+                  <div style="width: 154.52px; height: 25px; left: 15.66px; top: 333px; position: absolute">
+                    <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                    <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_interno_proxima}</div>
+                  </div>
+                  <div style="width: 154.52px; height: 25px; left: 15.66px; top: 390px; position: absolute">
+                    <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                    <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_separador_proxima}</div>
+                  </div>
+                  <div style="width: 154.52px; height: 25px; left: 174.47px; top: 390px; position: absolute">
+                    <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                    <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_combustivel_proxima}</div>
+                  </div>
+                  <div style="width: 154.52px; height: 25px; left: 174.47px; top: 333px; position: absolute">
+                    <div style="width: 154.52px; height: 25px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px; border: 1px rgba(0, 0, 0, 0.67) solid"></div>
+                    <div style="width: 147.01px; height: 19px; left: 4.29px; top: 3px; position: absolute; opacity: 0.90; text-align: center; color: black; font-size: 13px; font-family: Inter; font-weight: 400; word-wrap: break-word">${filtro_ar_externo_proxima}</div>
+                  </div>
+                  <div style="width: 162.04px; height: 25px; left: 165.36px; top: 117px; position: absolute">
+                 
+                  </div>
+                  <div style="width: 309.05px; height: 0px; left: 16.70px; top: 283.48px; position: absolute; border: 1.40px black solid"></div>
+                  <div style="width: 273.64px; height: 0px; left: 35px; top: 461px; position: absolute; border: 1.40px black solid"></div>
+                  <div style="width: 309.05px; height: 11px; left: 18.88px; top: 205px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">Próxima Troca de óleo</div>
+                  <div style="width: 113px; height: 11.80px; left: 10px; top: 198px; position: absolute; transform: rotate(-90deg); transform-origin: 0 0; text-align: center; color: black; font-size: 10px; font-family: Inter; font-weight: 400; line-height: 12px; word-wrap: break-word">${modelo}</div>
+                  <div style="width: 309px; height: 13px; left: 17px; top: 265px; position: absolute; text-align: center; color: black; font-size: 16px; font-family: Inter; font-weight: 600; line-height: 12px; word-wrap: break-word">Filtros</div>
+                  <div style="width: 64.39px; left: 141px; top: 463px; position: absolute; text-align: center; color: black; font-size: 11px; font-family: Inter; font-weight: 300; line-height: 12px; word-wrap: break-word">Supervisor</div>
+                  <div style="width: 150.23px; height: 18px; left: 17.80px; top: 315px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar interno</div>
+                  <div style="width: 150.23px; height: 18px; left: 176.62px; top: 315px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Ar externo</div>
+                  <div style="width: 175.99px; height: 29px; left: 23.17px; top: 0px; position: absolute; text-align: center; color: #008000; font-size: 24px; font-family: Inter; font-weight: 600; word-wrap: break-word">Próxima troca</div>
+    
+                  <div style="width: 150.23px; height: 18px; left: 176.62px; top: 372px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Combustível</div>
+                  <div style="width: 150.23px; height: 18px; left: 17.80px; top: 372px; position: absolute; text-align: center; color: black; font-size: 12px; font-family: Inter; font-weight: 600; word-wrap: break-word">Separ. d’ água</div>
+                </div>
+                <div style="width: 22.33px; height: 14px; left: 123.13px; top: 314px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
+               
+               
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 0px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
+                    
+                <image id="image0" width="517" height="482" x="0" y="0"
+                href="data:image/png;base64,${filtro_internobase64}"/>
+            </svg>
+                
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" style="width: 15px; height: 15px; left: 159px;  position: absolute;" viewBox="0 0 517 482" enable-background="new 0 0 517 482" xml:space="preserve"> 
+                    
+            <image id="image0" width="517" height="482" x="0" y="0"
+            href="data:image/png;base64,${filtro_internobase64}"/>
+        </svg>
+               
+                </div>
+                <div style="width: 22.33px; height: 14px; left: 276.03px; top: 314px; position: absolute"></div>
+                <div style="width: 20.70px; height: 59px; padding-top: 0px; padding-bottom: 0px; padding-right: 4.25px; left: 288.79px; top: 359px; position: absolute; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" transform="rotate(185)" y="0px" style="width: 39px; height: 50px;" viewBox="0 0 107 52" enable-background="new 0 0 107 52" xml:space="preserve"> 
+                    
+                <image id="image0"  width="104" height="104" x="0" y="0"
+                href="data:image/png;base64,${filtro_combustivelbase64}" />
+                </svg>
          
-          </div>
-          <div style="width: 82.06px; height: 39.47px; left: 232px; top: 5px; position: absolute">
-            <div style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; background: #FBFDFF; border-radius: 10px"></div>
+                </div>
+                <div style="width: 288.11px; height: 38px; left: 20.88px; top: 38px; position: absolute">
+                  <div style="width: 288.11px; height: 38px; left: 0px; top: 0px; position: absolute">
+                    <div style="width: 288.11px; height: 38px; left: 0px; top: 0px; position: absolute; opacity: 0.99; background: #FCFDFF; border-radius: 4px"></div>
+                    <div style="width: 277.12px; height: 28.88px; left: 8.09px; top: 4.56px; position: absolute; opacity: 0.90; text-align: center; color: #FCFDFF; font-size: 14px; font-family: Inter; font-weight: 400; word-wrap: break-word">Terça - feira</div>
+                  </div>
+                  <div style="width: 271.10px; height: 38px; left: 8.50px; top: ${top}px; position: absolute; text-align: center; color: black; font-size: 15px; font-family: Inter; font-weight: 700; word-wrap: break-word;">${name_equipamento}</div>
+                  
+              </div>
+              </div>
            
-            <img style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; border-radius: 10px" src="${url_imagem_equipamento}" />
-          </div>
-         
-  
-        ${cod_dia_lub(94.8,110)}
-
-  
-  
-  
-  `;
-
- 
+              
+              <div style="width: 21px; height: 14px; left: 129px; top: 384px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
+             
+                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" transform="rotate(55)" y="0px" style="width: 402px; height: 400px" viewBox="0 0 517 682" enable-background="new 0 0 517 482" xml:space="preserve"> 
+                    
+                <image id="image0"  width="624" height="524" x="0" y="0"
+                href="data:image/png;base64,${filtro_separadobase64}" />
+                </svg>
+             
+              </div>
+              <div style="width: 82.06px; height: 39.47px; left: 232px; top: 5px; position: absolute">
+                <div style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; background: #FBFDFF; border-radius: 10px"></div>
+               
+                <img style="width: 82.06px; height: 39.47px; left: 0px; top: 0px; position: absolute; border-radius: 10px" src="${url_imagem_equipamento}" />
+              </div>
+             
       
+            ${cod_dia_lub(94.8,110)}
+    
+      
+      
+      
+      `;
+     
       await page.setContent(htmlContent1);
-      const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true,margin:{top:40,left:45} });
-  
+      const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true, margin: { top: 40, left: 45 } });
+      
       await browser.close();
+      
+      const date = new Date();
+  const dateString = date.toISOString().replace(/:/g, '-'); // Formato: AAAA-MM-DDTHH-MM-SS.sssZ
   
-      res.contentType("application/pdf");
-      res.send(pdfBuffer);
-    } catch (error) {
-      console.error('Erro ao gerar o relatório:', error);
-      res.status(500).send('Ocorreu um erro ao gerar o relatório');
-    }
-  });
+      // Salve o PDF em uma pasta
+      fs.writeFile('public/upload/pdf_tep/' + name_equipamento + dateString + ".pdf", pdfBuffer, (err) => {
+        if (err) {
+          console.error('Erro ao salvar o PDF:', err);
+        } else {
+          console.log('PDF salvo com sucesso!');
+        }
+      });
+      
+  
+     
+   
+         
+      
+         
+        } catch (error) {
+          console.error('Erro ao gerar o relatório:', error);
+          res.status(500).send('Ocorreu um erro ao gerar o relatório');
+        }
+      }
+    };
+  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.listen(8080, () => {
-    console.log("Servidor iniciado na porta 8080: http://localhost:8080");
-});
+    module.exports = gerarRels;
