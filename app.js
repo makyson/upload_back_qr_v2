@@ -45,8 +45,11 @@ const serviceAccountAuth = new JWT({
 
 const doc = new GoogleSpreadsheet('1dSRpfTH2su9B4xoGTiY-_ML5SKX4sba36mT5HIUIKQE', serviceAccountAuth);
 
+let options;
+
+
 if(process.env.producao === "true"){
-const options = {
+options = {
   cert: fs.readFileSync(process.env.producao_cert),
   key: fs.readFileSync(process.env.producao_key)
 };
