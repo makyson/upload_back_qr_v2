@@ -12,7 +12,7 @@ const { login,register } = require('./auth');
 const app = express();
 require('dotenv').config();
 
-
+const https = require('https');
 
 
 app.use('/imagem',express.static(path.resolve(__dirname,"public","upload")))
