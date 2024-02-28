@@ -12,9 +12,10 @@ const { login,register } = require('./auth');
 const app = express();
 require('dotenv').config();
 
-const https = require('https');
 
 
+
+app.use('/imagem',express.static(path.resolve(__dirname,"public","upload")))
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
@@ -23,7 +24,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/imagem',express.static(path.resolve(__dirname,"public","upload")))
 
 
 
@@ -45,11 +45,8 @@ const serviceAccountAuth = new JWT({
 
 const doc = new GoogleSpreadsheet('1dSRpfTH2su9B4xoGTiY-_ML5SKX4sba36mT5HIUIKQE', serviceAccountAuth);
 
-let options;
-
-
 if(process.env.producao === "true"){
-options = {
+const options = {
   cert: fs.readFileSync(process.env.producao_cert),
   key: fs.readFileSync(process.env.producao_key)
 };
